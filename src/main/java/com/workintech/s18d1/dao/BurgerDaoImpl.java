@@ -75,7 +75,10 @@ public class BurgerDaoImpl implements BurgerDao {
     @Override
     @Transactional
     public Burger update(Burger burger) {
-        Burger existingBurger = findById(burger.getId());
+        Burger existingBurger = entityManager.find(Burger.class, burger.getId());
+        if (existingBurger == null) {
+            return entityManager.merge(burger);
+        }
         existingBurger.setName(burger.getName());
         existingBurger.setPrice(burger.getPrice());
         existingBurger.setIsVegan(burger.getIsVegan());
